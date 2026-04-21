@@ -1,0 +1,3 @@
+kind: Added
+body: 'log: Show readiness badge (ready/blocked by #N/merged/unsubmitted) next to each branch in ''gs log short'' and ''gs log long''. Full classification requires --cr-status/-S so change state is fetched.'
+time: 2026-04-21T16:12:34.028927768-07:00

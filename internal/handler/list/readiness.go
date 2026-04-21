@@ -12,22 +12,22 @@ const (
 	// been performed. Renderers should not draw a badge in this state.
 	ReadinessUnknown Readiness = iota
 
-	// ReadinessUnsubmitted: the branch is tracked but has no open change,
-	// or its change has been closed without merging.
+	// ReadinessUnsubmitted marks a branch that is tracked but has no
+	// open change, or whose change has been closed without merging.
 	ReadinessUnsubmitted
 
-	// ReadinessMerged: the branch's change has been merged.
+	// ReadinessMerged marks a branch whose change has been merged.
 	ReadinessMerged
 
-	// ReadinessDraft: the branch's change is a draft.
+	// ReadinessDraft marks a branch whose change is a draft.
 	ReadinessDraft
 
-	// ReadinessBlocked: the branch's change is open, but a non-merged
-	// submitted downstack ancestor still blocks merge order.
+	// ReadinessBlocked marks a branch whose change is open but a
+	// non-merged submitted downstack ancestor still blocks merge order.
 	ReadinessBlocked
 
-	// ReadinessReady: the branch is submitted, not a draft, and every
-	// submitted ancestor is merged (or there is no submitted ancestor).
+	// ReadinessReady marks a branch that is submitted, not a draft, and
+	// whose every submitted ancestor is merged (or has none).
 	ReadinessReady
 )
 

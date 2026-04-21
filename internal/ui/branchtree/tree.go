@@ -265,7 +265,7 @@ var DefaultStyle = Style{
 	CommentCountsResolved: ui.NewStyle().Foreground(ui.Green),
 	Worktree:              ui.NewStyle().Faint(true),
 	PushStatus:            ui.NewStyle().Foreground(ui.Yellow).Faint(true),
-	NeedsRestack: ui.NewStyle().Foreground(ui.Gray).SetString(" (needs restack)"), // TODO: drop leading space
+	NeedsRestack:          ui.NewStyle().Foreground(ui.Gray).SetString(" (needs restack)"), // TODO: drop leading space
 	Readiness: ReadinessStyle{
 		Unsubmitted: ui.NewStyle().Faint(true).SetString("unsubmitted"),
 		Merged:      ui.NewStyle().Foreground(ui.Magenta).SetString("merged"),
