@@ -79,6 +79,8 @@ main
         - #2 ◀
             - #3
 
+    Next: #3
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 3
@@ -88,6 +90,8 @@ main
     - #1
         - #2
             - #3 ◀
+
+    Depends on: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
@@ -101,6 +105,9 @@ main
             - #2 ◀
                 - #3
 
+    Depends on: #4
+    Next: #3
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 3
@@ -112,6 +119,8 @@ main
             - #2
                 - #3 ◀
 
+    Depends on: #2
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 4
@@ -122,6 +131,8 @@ main
         - #4 ◀
             - #2
                 - #3
+
+    Next: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->

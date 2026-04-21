@@ -247,6 +247,8 @@ INF CR #3 is up-to-date: $SHAMHUB_URL/alice/example/change/3
     - #1
         - #2 ◀
 
+    Depends on: #1
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 3
@@ -256,6 +258,8 @@ INF CR #3 is up-to-date: $SHAMHUB_URL/alice/example/change/3
     - #1
         - #2
             - #3 ◀
+
+    Depends on: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
@@ -276,6 +280,8 @@ INF CR #3 is up-to-date: $SHAMHUB_URL/alice/example/change/3
         - #2 ◀
             - #3
 
+    Next: #3
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 3
@@ -285,6 +291,8 @@ INF CR #3 is up-to-date: $SHAMHUB_URL/alice/example/change/3
     - #1
         - #2
             - #3 ◀
+
+    Depends on: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->

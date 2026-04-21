@@ -150,6 +150,8 @@ main
         - #2
             - #3
 
+    Next: #2
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 2
@@ -159,6 +161,9 @@ main
     - #1
         - #2 ◀
             - #3
+
+    Depends on: #1
+    Next: #3
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
@@ -170,6 +175,8 @@ main
         - #2
             - #3 ◀
 
+    Depends on: #2
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 -- golden/submit-second-stack-comments.txt --
@@ -180,6 +187,8 @@ main
     - #4 ◀
         - #5
 
+    Next: #5
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 5
@@ -188,6 +197,8 @@ main
 
     - #4
         - #5 ◀
+
+    Depends on: #4
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
@@ -200,6 +211,8 @@ main
         - #2 ◀
             - #3
 
+    Next: #3
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 3
@@ -209,6 +222,8 @@ main
     - #1
         - #2
             - #3 ◀
+
+    Depends on: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
@@ -231,6 +246,8 @@ main
             - #3
             - #5
 
+    Next: #3
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 3
@@ -241,6 +258,8 @@ main
         - #2
             - #3 ◀
 
+    Depends on: #2
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 5
@@ -250,6 +269,8 @@ main
     - #1
         - #2
             - #5 ◀
+
+    Depends on: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
