@@ -1,0 +1,83 @@
+# Verify that 'Depends on:' and 'Next:' lines appear
+# in the PR navigation comments posted for a linear stack.
+
+as 'Test <test@example.com>'
+at '2024-04-05T16:40:32Z'
+
+# setup
+cd repo
+git init
+git commit --allow-empty -m 'Initial commit'
+
+# set up a fake forge remote
+shamhub init
+shamhub new origin alice/example.git
+shamhub register alice
+git push origin main
+
+# create a stack:
+# main -> feat-a -> feat-b -> feat-c
+git add feat-a.txt
+gs branch create feat-a -m 'Add feat a'
+git add feat-b.txt
+gs branch create feat-b -m 'Add feat b'
+git add feat-c.txt
+gs branch create feat-c -m 'Add feat c'
+
+env SHAMHUB_USERNAME=alice
+gs auth login
+
+# submit the entire stack.
+gs stack submit --fill
+stderr 'Created #1'
+stderr 'Created #2'
+stderr 'Created #3'
+
+shamhub dump comments
+cmp stdout $WORK/golden/comments.txt
+
+-- repo/feat-a.txt --
+This is feat a
+-- repo/feat-b.txt --
+This is feat b
+-- repo/feat-c.txt --
+This is feat c
+
+-- golden/comments.txt --
+- change: 1
+  body: |
+    This change is part of the following stack:
+
+    - #1 ◀
+        - #2
+            - #3
+
+    Next: #2
+
+    <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
+    <!-- gs:navigation comment -->
+- change: 2
+  body: |
+    This change is part of the following stack:
+
+    - #1
+        - #2 ◀
+            - #3
+
+    Depends on: #1
+    Next: #3
+
+    <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
+    <!-- gs:navigation comment -->
+- change: 3
+  body: |
+    This change is part of the following stack:
+
+    - #1
+        - #2
+            - #3 ◀
+
+    Depends on: #2
+
+    <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
+    <!-- gs:navigation comment -->
