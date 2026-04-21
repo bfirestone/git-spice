@@ -474,9 +474,10 @@ func (r *branchTreeRenderer) readiness(
 	case ReadinessDraft:
 		sb.WriteString(r.Style.Readiness.Draft.String())
 	case ReadinessBlocked:
-		sb.WriteString(r.Style.Readiness.Blocked.String())
 		if blockedBy != nil {
-			sb.WriteString(r.Style.Readiness.Blocked.Render(" " + blockedBy.String()))
+			sb.WriteString(r.Style.Readiness.Blocked.Render(blockedBy.String()))
+		} else {
+			sb.WriteString(r.Style.Readiness.Blocked.String())
 		}
 	case ReadinessReady:
 		sb.WriteString(r.Style.Readiness.Ready.String())

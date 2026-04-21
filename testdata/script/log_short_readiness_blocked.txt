@@ -1,0 +1,57 @@
+# 'gs log short -S' shows 'blocked by #N' when an upstack branch's PR
+# is still waiting on a downstack submitted PR to merge.
+
+as 'Test <test@example.com>'
+at '2025-09-23T19:12:00Z'
+
+mkdir repo
+cd repo
+git init
+git commit --allow-empty -m 'Initial commit'
+gs repo init
+
+# set up a fake remote
+shamhub init
+shamhub register alice
+shamhub new origin alice/example.git
+git push origin main
+env SHAMHUB_USERNAME=alice
+gs auth login
+
+# Build a 3-branch stack, submit all three.
+git add feat1.txt
+gs bc feat1 -m 'feat1'
+git add feat2.txt
+gs bc feat2 -m 'feat2'
+git add feat3.txt
+gs bc feat3 -m 'feat3'
+gs dss --fill
+
+# No PRs merged yet: the top two should be 'blocked by ...', and the
+# bottom one should be 'ready' (nothing submitted-and-open below it).
+gs ls -S
+cmp stderr $WORK/golden/ls-all-open.txt
+
+# Merge the bottom PR. Now feat2 is ready, and feat3 is still blocked
+# by feat2 (the nearest unmerged submitted ancestor).
+shamhub merge alice/example 1
+gs ls -S
+cmp stderr $WORK/golden/ls-feat1-merged.txt
+
+-- repo/feat1.txt --
+feat1
+-- repo/feat2.txt --
+feat2
+-- repo/feat3.txt --
+feat3
+
+-- golden/ls-all-open.txt --
+    ┏━■ feat3 (#3 open) blocked by #2 ◀
+  ┏━┻□ feat2 (#2 open) blocked by #1
+┏━┻□ feat1 (#1 open) ready
+main
+-- golden/ls-feat1-merged.txt --
+    ┏━■ feat3 (#3 open) blocked by #2 ◀
+  ┏━┻□ feat2 (#2 open) ready
+┏━┻□ feat1 (#1 merged) merged
+main
