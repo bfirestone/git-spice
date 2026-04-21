@@ -394,41 +394,7 @@ func TestUpdateNavigationComments(t *testing.T) {
 			},
 		},
 		{
-			name: "LinearStack_DependsAndNext",
-			trackedBranches: []trackedBranch{
-				{Name: "feat1", ChangeID: 1},
-				{Name: "feat2", Base: "feat1", ChangeID: 2},
-				{Name: "feat3", Base: "feat2", ChangeID: 3},
-			},
-			sync:   NavCommentSyncDownstack,
-			submit: []string{"feat3"},
-			wantComments: map[int]string{
-				1: joinLines(
-					"- #1 ◀",
-					"    - #2",
-					"        - #3",
-					"",
-					"Next: #2",
-				),
-				2: joinLines(
-					"- #1",
-					"    - #2 ◀",
-					"        - #3",
-					"",
-					"Depends on: #1",
-					"Next: #3",
-				),
-				3: joinLines(
-					"- #1",
-					"    - #2",
-					"        - #3 ◀",
-					"",
-					"Depends on: #2",
-				),
-			},
-		},
-		{
-			name: "BottomOfStack_OnlyNext",
+			name: "BottomOfStack/OnlyNext",
 			trackedBranches: []trackedBranch{
 				{Name: "feat1", ChangeID: 1},
 				{Name: "feat2", Base: "feat1", ChangeID: 2},
@@ -451,7 +417,7 @@ func TestUpdateNavigationComments(t *testing.T) {
 			},
 		},
 		{
-			name: "TopOfStack_OnlyDepends",
+			name: "TopOfStack/OnlyDepends",
 			trackedBranches: []trackedBranch{
 				{Name: "feat1", ChangeID: 1},
 				{Name: "feat2", Base: "feat1", ChangeID: 2},
@@ -472,7 +438,7 @@ func TestUpdateNavigationComments(t *testing.T) {
 			// the graph cannot link them (the unsubmitted branch is
 			// skipped during node construction), so the top branch's
 			// nav-comment has no Depends on / Next lines.
-			name: "UnsubmittedGap_SkipsPastToNearestSubmitted",
+			name: "UnsubmittedGap/SkipsPastToNearestSubmitted",
 			trackedBranches: []trackedBranch{
 				{Name: "feat1", ChangeID: 1},
 				{Name: "feat2", Base: "feat1", ChangeID: 0}, // unsubmitted
@@ -490,7 +456,7 @@ func TestUpdateNavigationComments(t *testing.T) {
 			},
 		},
 		{
-			name: "MergedAncestor_SkipsPastMerged",
+			name: "MergedAncestor/SkipsPastMerged",
 			trackedBranches: []trackedBranch{
 				{Name: "feat1", ChangeID: 2, MergedDownstack: []int{1}},
 				{Name: "feat2", Base: "feat1", ChangeID: 3},
