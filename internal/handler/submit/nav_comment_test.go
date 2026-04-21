@@ -89,6 +89,9 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"- #123",
 					"    - #124 ◀",
 					"        - #125",
+					"",
+					"Depends on: #123",
+					"Next: #125",
 				),
 			},
 		},
@@ -107,16 +110,23 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"- #123 ◀",
 					"    - #124",
 					"        - #125",
+					"",
+					"Next: #124",
 				),
 				124: joinLines(
 					"- #123",
 					"    - #124 ◀",
 					"        - #125",
+					"",
+					"Depends on: #123",
+					"Next: #125",
 				),
 				125: joinLines(
 					"- #123",
 					"    - #124",
 					"        - #125 ◀",
+					"",
+					"Depends on: #124",
 				),
 			},
 		},
@@ -134,18 +144,26 @@ func TestUpdateNavigationComments(t *testing.T) {
 				123: joinLines(
 					"- #123 ◀",
 					"    - #124",
+					"",
+					"Next: #124",
 				),
 				124: joinLines(
 					"- #123",
 					"    - #124 ◀",
+					"",
+					"Depends on: #123",
 				),
 				125: joinLines(
 					"- #125 ◀",
 					"    - #126",
+					"",
+					"Next: #126",
 				),
 				126: joinLines(
 					"- #125",
 					"    - #126 ◀",
+					"",
+					"Depends on: #125",
 				),
 			},
 		},
@@ -164,11 +182,16 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"- #123 ◀",
 					"    - #124",
 					"        - #125",
+					"",
+					"Next: #124",
 				),
 				124: joinLines(
 					"- #123",
 					"    - #124 ◀",
 					"        - #125",
+					"",
+					"Depends on: #123",
+					"Next: #125",
 				),
 			},
 		},
@@ -188,20 +211,29 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"    - #124",
 					"        - #126",
 					"    - #125",
+					"",
+					"Next: #124",
 				),
 				124: joinLines(
 					"- #123",
 					"    - #124 ◀",
 					"        - #126",
+					"",
+					"Depends on: #123",
+					"Next: #126",
 				),
 				125: joinLines(
 					"- #123",
 					"    - #125 ◀",
+					"",
+					"Depends on: #123",
 				),
 				126: joinLines(
 					"- #123",
 					"    - #124",
 					"        - #126 ◀",
+					"",
+					"Depends on: #124",
 				),
 			},
 		},
@@ -232,6 +264,8 @@ func TestUpdateNavigationComments(t *testing.T) {
 				123: joinLines(
 					"- #123 ◀",
 					"    - #124",
+					"",
+					"Next: #124",
 				),
 				125: joinLines(
 					"- #125 ◀",
@@ -254,11 +288,15 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"    - #124",
 					"        - #126",
 					"    - #125",
+					"",
+					"Next: #124",
 				),
 				126: joinLines(
 					"- #123",
 					"    - #124",
 					"        - #126 ◀",
+					"",
+					"Depends on: #124",
 				),
 			},
 		},
@@ -295,6 +333,8 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"        - #123 ◀",
 					"            - #124",
 					"                - #125",
+					"",
+					"Next: #124",
 				),
 				124: joinLines(
 					"- #100",
@@ -302,6 +342,9 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"        - #123",
 					"            - #124 ◀",
 					"                - #125",
+					"",
+					"Depends on: #123",
+					"Next: #125",
 				),
 				125: joinLines(
 					"- #100",
@@ -309,6 +352,8 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"        - #123",
 					"            - #124",
 					"                - #125 ◀",
+					"",
+					"Depends on: #124",
 				),
 			},
 		},
@@ -328,16 +373,144 @@ func TestUpdateNavigationComments(t *testing.T) {
 					"- #123 ◀",
 					"    - #124",
 					"        - #125",
+					"",
+					"Next: #124",
 				),
 				124: joinLines(
 					"- #123",
 					"    - #124 ◀",
 					"        - #125",
+					"",
+					"Depends on: #123",
+					"Next: #125",
 				),
 				125: joinLines(
 					"- #123",
 					"    - #124",
 					"        - #125 ◀",
+					"",
+					"Depends on: #124",
+				),
+			},
+		},
+		{
+			name: "LinearStack_DependsAndNext",
+			trackedBranches: []trackedBranch{
+				{Name: "feat1", ChangeID: 1},
+				{Name: "feat2", Base: "feat1", ChangeID: 2},
+				{Name: "feat3", Base: "feat2", ChangeID: 3},
+			},
+			sync:   NavCommentSyncDownstack,
+			submit: []string{"feat3"},
+			wantComments: map[int]string{
+				1: joinLines(
+					"- #1 ◀",
+					"    - #2",
+					"        - #3",
+					"",
+					"Next: #2",
+				),
+				2: joinLines(
+					"- #1",
+					"    - #2 ◀",
+					"        - #3",
+					"",
+					"Depends on: #1",
+					"Next: #3",
+				),
+				3: joinLines(
+					"- #1",
+					"    - #2",
+					"        - #3 ◀",
+					"",
+					"Depends on: #2",
+				),
+			},
+		},
+		{
+			name: "BottomOfStack_OnlyNext",
+			trackedBranches: []trackedBranch{
+				{Name: "feat1", ChangeID: 1},
+				{Name: "feat2", Base: "feat1", ChangeID: 2},
+			},
+			sync:   NavCommentSyncDownstack,
+			submit: []string{"feat2"},
+			wantComments: map[int]string{
+				1: joinLines(
+					"- #1 ◀",
+					"    - #2",
+					"",
+					"Next: #2",
+				),
+				2: joinLines(
+					"- #1",
+					"    - #2 ◀",
+					"",
+					"Depends on: #1",
+				),
+			},
+		},
+		{
+			name: "TopOfStack_OnlyDepends",
+			trackedBranches: []trackedBranch{
+				{Name: "feat1", ChangeID: 1},
+				{Name: "feat2", Base: "feat1", ChangeID: 2},
+			},
+			sync:   NavCommentSyncBranch,
+			submit: []string{"feat2"},
+			wantComments: map[int]string{
+				2: joinLines(
+					"- #1",
+					"    - #2 ◀",
+					"",
+					"Depends on: #1",
+				),
+			},
+		},
+		{
+			// With an unsubmitted branch between two submitted ones,
+			// the graph cannot link them (the unsubmitted branch is
+			// skipped during node construction), so the top branch's
+			// nav-comment has no Depends on / Next lines.
+			name: "UnsubmittedGap_SkipsPastToNearestSubmitted",
+			trackedBranches: []trackedBranch{
+				{Name: "feat1", ChangeID: 1},
+				{Name: "feat2", Base: "feat1", ChangeID: 0}, // unsubmitted
+				{Name: "feat3", Base: "feat2", ChangeID: 3},
+			},
+			sync:   NavCommentSyncBranch,
+			submit: []string{"feat1", "feat3"},
+			wantComments: map[int]string{
+				1: joinLines(
+					"- #1 ◀",
+				),
+				3: joinLines(
+					"- #3 ◀",
+				),
+			},
+		},
+		{
+			name: "MergedAncestor_SkipsPastMerged",
+			trackedBranches: []trackedBranch{
+				{Name: "feat1", ChangeID: 2, MergedDownstack: []int{1}},
+				{Name: "feat2", Base: "feat1", ChangeID: 3},
+			},
+			sync:   NavCommentSyncDownstack,
+			submit: []string{"feat2"},
+			wantComments: map[int]string{
+				2: joinLines(
+					"- #1",
+					"    - #2 ◀",
+					"        - #3",
+					"",
+					"Next: #3",
+				),
+				3: joinLines(
+					"- #1",
+					"    - #2",
+					"        - #3 ◀",
+					"",
+					"Depends on: #2",
 				),
 			},
 		},
@@ -715,6 +888,8 @@ func TestGenerateStackNavigationComment(t *testing.T) {
 				"- #123",
 				"    - #124",
 				"        - #125 ◀",
+				"",
+				"Depends on: #124",
 			),
 		},
 		{
@@ -729,6 +904,8 @@ func TestGenerateStackNavigationComment(t *testing.T) {
 				"- #123 ◀",
 				"    - #124",
 				"        - #125",
+				"",
+				"Next: #124",
 			),
 		},
 		{
@@ -747,6 +924,8 @@ func TestGenerateStackNavigationComment(t *testing.T) {
 				"        - #126",
 				"    - #125",
 				"        - #127",
+				"",
+				"Next: #124",
 			),
 		},
 		{
@@ -765,6 +944,9 @@ func TestGenerateStackNavigationComment(t *testing.T) {
 				"- #123",
 				"    - #124 ◀",
 				"        - #125",
+				"",
+				"Depends on: #123",
+				"Next: #125",
 			),
 		},
 	}
@@ -809,6 +991,8 @@ func TestGenerateStackNavigationComment(t *testing.T) {
 			joinLines(
 				"- #123",
 				"    - #124 <-- you are here",
+				"",
+				"Depends on: #123",
 			) + "\n" +
 			_commentFooter + "\n" +
 			_commentMarker + "\n"
@@ -832,6 +1016,8 @@ func TestGenerateStackNavigationComment(t *testing.T) {
 			joinLines(
 				"- #123+",
 				"    - #124+ ◀",
+				"",
+				"Depends on: #123+",
 			) + "\n" +
 			_commentFooter + "\n" +
 			_commentMarker + "\n"
