@@ -44,22 +44,22 @@ Feature 3 content
 -- repo/feat4.txt --
 Feature 4 content
 -- golden/before-ls.txt --
-  ┏━□ feat2
-┏━┻□ feat1
+  ┏━□ feat2 unsubmitted
+┏━┻□ feat1 unsubmitted
 main
 -- golden/after-ls.txt --
-      ┏━■ feat4 ◀
-    ┏━┻□ feat3
-  ┏━┻□ feat2
-┏━┻□ feat1
+      ┏━■ feat4 unsubmitted ◀
+    ┏━┻□ feat3 unsubmitted
+  ┏━┻□ feat2 unsubmitted
+┏━┻□ feat1 unsubmitted
 main
 -- golden/after-ll.txt --
-      ┏━■ feat4 ◀
+      ┏━■ feat4 unsubmitted ◀
       ┃   794d949 Add feat4 (now)
-    ┏━┻□ feat3
+    ┏━┻□ feat3 unsubmitted
     ┃    5c7162f Add feat3 (now)
-  ┏━┻□ feat2
+  ┏━┻□ feat2 unsubmitted
   ┃    f81ebba Add feat2 (now)
-┏━┻□ feat1
+┏━┻□ feat1 unsubmitted
 ┃    2655425 Add feat1 (now)
 main

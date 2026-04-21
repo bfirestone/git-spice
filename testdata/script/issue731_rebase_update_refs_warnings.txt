@@ -54,23 +54,23 @@ change A
 additional change in A
 
 -- golden/ll-before.txt --
-      ┏━■ featD ◀
+      ┏━■ featD unsubmitted ◀
       ┃   dab4857 commit D (now)
-    ┏━┻□ featC
+    ┏━┻□ featC unsubmitted
     ┃    f56fce0 commit C (now)
-  ┏━┻□ featB
+  ┏━┻□ featB unsubmitted
   ┃    e6addcd commit B (now)
-┏━┻□ featA
+┏━┻□ featA unsubmitted
 ┃    eb56755 commit A (now)
 main
 -- golden/ll-after.txt --
-      ┏━■ featD ◀
+      ┏━■ featD unsubmitted ◀
       ┃   285a1b7 commit D (now)
-    ┏━┻□ featC
+    ┏━┻□ featC unsubmitted
     ┃    f21feba commit C (now)
-  ┏━┻□ featB
+  ┏━┻□ featB unsubmitted
   ┃    29fe805 commit B (now)
-┏━┻□ featA
+┏━┻□ featA unsubmitted
 ┃    25c3f92 additional commit in A (now)
 ┃    eb56755 commit A (now)
 main

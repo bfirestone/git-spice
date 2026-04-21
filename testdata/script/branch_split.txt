@@ -32,12 +32,12 @@ feature2
 -- repo/feature3.txt --
 feature3
 -- golden/before.txt --
-┏━■ features ◀
+┏━■ features unsubmitted ◀
 main
 -- golden/after.txt --
-    ┏━■ features ◀
-  ┏━┻□ feature2
-┏━┻□ feature1
+    ┏━■ features unsubmitted ◀
+  ┏━┻□ feature2 unsubmitted
+┏━┻□ feature1 unsubmitted
 main
 -- golden/graph.txt --
 * 99827e4 (HEAD -> features) Add feature3

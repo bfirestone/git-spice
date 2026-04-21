@@ -31,7 +31,7 @@ cmp stdout $WORK/golden/graph.txt
 foo
 
 -- golden/ll-feat1.txt --
-┏━■ feat1 ◀
+┏━■ feat1 unsubmitted ◀
 ┃   aadd769 Add foo (now)
 main
 -- golden/graph.txt --

@@ -85,16 +85,16 @@ main
 ┃    ed5e364 feat1 (now)
 main
 -- golden/ls-with-status.txt --
-    ┏━■ feat3 (#3 closed) ◀
-  ┏━┻□ feat2 (#2 open)
-┏━┻□ feat1 (#1 merged)
+    ┏━■ feat3 (#3 closed) unsubmitted ◀
+  ┏━┻□ feat2 (#2 open) ready
+┏━┻□ feat1 (#1 merged) merged
 main
 -- golden/ll-with-status.txt --
-    ┏━■ feat3 (#3 closed) ◀
+    ┏━■ feat3 (#3 closed) unsubmitted ◀
     ┃   67480b6 feat3 (now)
-  ┏━┻□ feat2 (#2 open)
+  ┏━┻□ feat2 (#2 open) ready
   ┃    769cbf5 feat2 (now)
-┏━┻□ feat1 (#1 merged)
+┏━┻□ feat1 (#1 merged) merged
 ┃    ed5e364 feat1 (now)
 main
 -- golden/ls-without-status.json --

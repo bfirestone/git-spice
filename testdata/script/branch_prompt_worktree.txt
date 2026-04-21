@@ -90,8 +90,8 @@ gs ls -a
 > Moving feat2 onto another branch
 "main"
 -- golden/ls-unix.txt --
-┏━□ feat1 [wt: ~/feat1]
-┣━■ feat2 ◀
+┏━□ feat1 [wt: ~/feat1] unsubmitted
+┣━■ feat2 unsubmitted ◀
 main
 -- golden/ls-windows.txt --
 ┏━□ feat1 [wt: ~\feat1]

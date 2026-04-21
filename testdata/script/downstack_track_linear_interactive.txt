@@ -136,17 +136,17 @@ feature 8
 > We can track it as the base for feat3, or skip it.
 "feat1"
 -- golden/ll.txt --
-        ┏━■ feat8 ◀
+        ┏━■ feat8 unsubmitted ◀
         ┃   ed87235 Add feat8 (now)
-      ┏━┻□ feat7
+      ┏━┻□ feat7 unsubmitted
       ┃    72d250a Add feat7 (now)
       ┃    67f3bad Add feat6 (now)
-    ┏━┻□ feat5
+    ┏━┻□ feat5 unsubmitted
     ┃    12f00ad Add feat5 (now)
     ┃    d7232bb Add feat4 (now)
-  ┏━┻□ feat3
+  ┏━┻□ feat3 unsubmitted
   ┃    787d612 Add feat3 (now)
   ┃    524ca36 Add feat2 (now)
-┏━┻□ feat1
+┏━┻□ feat1 unsubmitted
 ┃    7b2492b Add feat1 (now)
 main

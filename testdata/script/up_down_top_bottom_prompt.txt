@@ -69,11 +69,11 @@ gs up -n 2
 cmp $WORK/robot.up-2.actual $WORK/robot.up-2.golden
 
 -- golden/ls.txt --
-    ┏━□ feature3
-  ┏━┻□ feature2
-  ┃ ┏━□ feature5
-  ┣━┻□ feature4
-┏━┻□ feature1
+    ┏━□ feature3 unsubmitted
+  ┏━┻□ feature2 unsubmitted
+  ┃ ┏━□ feature5 unsubmitted
+  ┣━┻□ feature4 unsubmitted
+┏━┻□ feature1 unsubmitted
 main ◀
 -- robot.up.golden --
 ===

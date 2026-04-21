@@ -54,8 +54,8 @@ Contents of feature2
 Contents of feature3
 
 -- golden/restacked.txt --
-  ┏━□ feature3
-┏━┻□ feature2
+  ┏━□ feature3 unsubmitted
+┏━┻□ feature2 unsubmitted
 main ◀
 -- golden/graph.txt --
 * 935a1f6 (feature3) Add feature3

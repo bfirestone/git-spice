@@ -30,7 +30,7 @@ feature
 exit 1
 
 -- golden/ll.txt --
-┏━■ feature ◀
+┏━■ feature unsubmitted ◀
 ┃   5648694 Add feature (now)
 main
 -- golden/diff.txt --

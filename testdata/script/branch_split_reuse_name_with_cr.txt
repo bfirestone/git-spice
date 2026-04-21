@@ -51,9 +51,9 @@ feature3
 ┃   569c763 Add feature1 (now)
 main
 -- golden/after_split.txt --
-    ┏━■ feature3 ◀
+    ┏━■ feature3 unsubmitted ◀
     ┃   242e421 Add feature3 (now)
-  ┏━┻□ feature2
+  ┏━┻□ feature2 unsubmitted
   ┃    3c19fb9 Add feature2 (now)
 ┏━┻□ features (#1) (needs push)
 ┃    569c763 Add feature1 (now)

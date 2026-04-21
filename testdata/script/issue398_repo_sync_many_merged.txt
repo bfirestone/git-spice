@@ -108,21 +108,21 @@ feat3 part2
 -- repo/feat4.part2.txt --
 feat4 part2
 -- golden/ll.start.txt --
-  ┏━□ feat1-part2
+  ┏━□ feat1-part2 unsubmitted
   ┃   3b90c1c feat1.part2 (now)
-  ┃ ┏━□ feat2-part2
+  ┃ ┏━□ feat2-part2 unsubmitted
   ┃ ┃   a252f85 feat2.part2 (now)
-  ┃ ┃ ┏━□ feat3-part2
+  ┃ ┃ ┏━□ feat3-part2 unsubmitted
   ┃ ┃ ┃   9a90907 feat3.part2 (now)
-  ┃ ┃ ┃ ┏━□ feat4-part2
+  ┃ ┃ ┃ ┏━□ feat4-part2 unsubmitted
   ┃ ┃ ┃ ┃   d568d96 feat4.part2 (now)
-  ┃ ┃ ┣━┻□ feat4
+  ┃ ┃ ┣━┻□ feat4 unsubmitted
   ┃ ┃ ┃    267a7ec feat4 (now)
-  ┃ ┣━┻□ feat3
+  ┃ ┣━┻□ feat3 unsubmitted
   ┃ ┃    fcb4332 feat3 (now)
-  ┣━┻□ feat2
+  ┣━┻□ feat2 unsubmitted
   ┃    aee78bc feat2 (now)
-┏━┻□ feat1
+┏━┻□ feat1 unsubmitted
 ┃    fc49b37 feat1 (now)
 main ◀
 -- golden/ls.submit.txt --

@@ -20,6 +20,6 @@ cmp stderr $WORK/golden/ll.txt
 feature
 
 -- golden/ll.txt --
-┏━■ myuser/feature ◀
+┏━■ myuser/feature unsubmitted ◀
 ┃   eb4b3b8 Add feature (now)
 main

@@ -67,15 +67,15 @@ Feature 3 content
 > We can track it as the base for feat2, or skip it.
 "feat1"
 -- golden/ls.txt --
-    ┏━■ feat3 ◀
-  ┏━┻□ feat2
-┏━┻□ feat1
+    ┏━■ feat3 unsubmitted ◀
+  ┏━┻□ feat2 unsubmitted
+┏━┻□ feat1 unsubmitted
 main
 -- golden/ll.txt --
-    ┏━■ feat3 ◀
+    ┏━■ feat3 unsubmitted ◀
     ┃   4daf884 Add feat3 (now)
-  ┏━┻□ feat2
+  ┏━┻□ feat2 unsubmitted
   ┃    f81ebba Add feat2 (now)
-┏━┻□ feat1
+┏━┻□ feat1 unsubmitted
 ┃    2655425 Add feat1 (now)
 main

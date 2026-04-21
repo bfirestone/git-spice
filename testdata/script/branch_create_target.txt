@@ -53,22 +53,22 @@ feature 4
 feature 5
 
 -- golden/add-feature3.txt --
-  ┏━□ feature2
-  ┣━■ feature3 ◀
-┏━┻□ feature1
+  ┏━□ feature2 unsubmitted
+  ┣━■ feature3 unsubmitted ◀
+┏━┻□ feature1 unsubmitted
 main
 -- golden/add-feature4.txt --
-    ┏━□ feature2
-    ┣━□ feature3
-  ┏━┻■ feature4 ◀
-┏━┻□ feature1
+    ┏━□ feature2 unsubmitted
+    ┣━□ feature3 unsubmitted
+  ┏━┻■ feature4 unsubmitted ◀
+┏━┻□ feature1 unsubmitted
 main
 -- golden/add-feature5.txt --
-      ┏━□ feature2
-      ┣━□ feature3
-    ┏━┻□ feature4
-  ┏━┻□ feature1
-┏━┻■ feature5 ◀
+      ┏━□ feature2 unsubmitted
+      ┣━□ feature3 unsubmitted
+    ┏━┻□ feature4 unsubmitted
+  ┏━┻□ feature1 unsubmitted
+┏━┻■ feature5 unsubmitted ◀
 main
 -- golden/graph.txt --
 * 2996f1e (feature2) Add feature 2

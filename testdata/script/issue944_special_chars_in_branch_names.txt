@@ -70,11 +70,11 @@ Café feature content
 -- repo/feat5.txt --
 Japanese feature content
 -- golden/ls-after-create.txt --
-        ┏━■ feature/日本語 ◀
-      ┏━┻□ feature/café
-    ┏━┻□ feature/👨‍💻-developer
-  ┏━┻□ feature/✅-checkmark
-┏━┻□ feature/θ-theta
+        ┏━■ feature/日本語 unsubmitted ◀
+      ┏━┻□ feature/café unsubmitted
+    ┏━┻□ feature/👨‍💻-developer unsubmitted
+  ┏━┻□ feature/✅-checkmark unsubmitted
+┏━┻□ feature/θ-theta unsubmitted
 main
 -- golden/changes-after-submit.json --
 [

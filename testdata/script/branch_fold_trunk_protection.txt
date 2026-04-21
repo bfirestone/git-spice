@@ -52,8 +52,8 @@ Feature 1 content
 Feature 2 content
 
 -- golden/ls-before.txt --
-  ┏━■ feature2 ◀
-┏━┻□ feature1
+  ┏━■ feature2 unsubmitted ◀
+┏━┻□ feature1 unsubmitted
 main
 -- golden/robot-no.txt --
 ===
@@ -66,8 +66,8 @@ false
 false
 
 -- golden/ls-after-abort.txt --
-  ┏━□ feature2
-┏━┻■ feature1 ◀
+  ┏━□ feature2 unsubmitted
+┏━┻■ feature1 unsubmitted ◀
 main
 -- golden/robot-yes.txt --
 ===
@@ -80,7 +80,7 @@ true
 true
 
 -- golden/ls-after-feature1-folded.txt --
-┏━□ feature2
+┏━□ feature2 unsubmitted
 main ◀
 -- golden/non-interactive-warning.txt --
 INF Branch feature2 has been folded into main

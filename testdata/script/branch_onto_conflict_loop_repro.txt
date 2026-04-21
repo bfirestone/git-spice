@@ -73,26 +73,26 @@ cmp stderr $WORK/golden/ll-after-three-onto-two.txt
 -- extra/three.txt --
 3
 -- golden/ll-before.txt --
-┏━□ one
+┏━□ one unsubmitted
 ┃   1cd0ae2 Add one (now)
-┃ ┏━□ three
+┃ ┏━□ three unsubmitted
 ┃ ┃   41de4ed Add three (now)
-┣━┻□ two
+┣━┻□ two unsubmitted
 ┃    def1539 Add two (now)
 main ◀
 -- golden/ll-after-two-onto-one.txt --
-  ┏━■ two ◀
+  ┏━■ two unsubmitted ◀
   ┃   6f74174 Add two (now)
-┏━┻□ one
+┏━┻□ one unsubmitted
 ┃    1cd0ae2 Add one (now)
-┣━□ three
+┣━□ three unsubmitted
 ┃   dcd3b5d Add three (now)
 main
 -- golden/ll-after-three-onto-two.txt --
-    ┏━■ three ◀
+    ┏━■ three unsubmitted ◀
     ┃   6b39879 Add three (now)
-  ┏━┻□ two
+  ┏━┻□ two unsubmitted
   ┃    6f74174 Add two (now)
-┏━┻□ one
+┏━┻□ one unsubmitted
 ┃    1cd0ae2 Add one (now)
 main

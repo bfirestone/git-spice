@@ -25,12 +25,12 @@ gs ls
 cmp stderr $WORK/golden/ls-after.txt
 
 -- golden/ls-before.txt --
-    ┏━□ feat3
-  ┏━┻□ feat2
-┏━┻□ feat1
+    ┏━□ feat3 unsubmitted
+  ┏━┻□ feat2 unsubmitted
+┏━┻□ feat1 unsubmitted
 main ◀
 -- golden/ls-after.txt --
 INF tracked branch feat3 was deleted out of band: removing...
-  ┏━□ feat2
-┏━┻□ feat1
+  ┏━□ feat2 unsubmitted
+┏━┻□ feat1 unsubmitted
 main ◀

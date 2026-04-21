@@ -29,9 +29,9 @@ feature 2
 -- repo/feature1-new.txt --
 new feature 1
 -- golden/ll.txt --
-  ┏━■ y ◀
+  ┏━■ y unsubmitted ◀
   ┃   b903d8e Remove feature 2 and rename feature 1 (now)
-┏━┻□ x
+┏━┻□ x unsubmitted
 ┃    2840e92 Add features 1 and 2 (now)
 main
 -- golden/diff.txt --

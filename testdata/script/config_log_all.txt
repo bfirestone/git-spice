@@ -38,34 +38,34 @@ gs ll
 cmp stderr $WORK/golden/ll-after.txt
 
 -- golden/ls-before.txt --
-    ┏━■ feat3 ◀
-  ┏━┻□ feat2
-┏━┻□ feat1
+    ┏━■ feat3 unsubmitted ◀
+  ┏━┻□ feat2 unsubmitted
+┏━┻□ feat1 unsubmitted
 main
 -- golden/ll-before.txt --
-    ┏━■ feat3 ◀
+    ┏━■ feat3 unsubmitted ◀
     ┃   7b5eba4 feat3 (now)
-  ┏━┻□ feat2
+  ┏━┻□ feat2 unsubmitted
   ┃    562c8c6 feat2 (now)
-┏━┻□ feat1
+┏━┻□ feat1 unsubmitted
 ┃    ecc906e feat1 (now)
 main
 -- golden/ls-after.txt --
-    ┏━■ feat3 ◀
-  ┏━┻□ feat2
-  ┃ ┏━□ feat5
-  ┣━┻□ feat4
-┏━┻□ feat1
+    ┏━■ feat3 unsubmitted ◀
+  ┏━┻□ feat2 unsubmitted
+  ┃ ┏━□ feat5 unsubmitted
+  ┣━┻□ feat4 unsubmitted
+┏━┻□ feat1 unsubmitted
 main
 -- golden/ll-after.txt --
-    ┏━■ feat3 ◀
+    ┏━■ feat3 unsubmitted ◀
     ┃   7b5eba4 feat3 (now)
-  ┏━┻□ feat2
+  ┏━┻□ feat2 unsubmitted
   ┃    562c8c6 feat2 (now)
-  ┃ ┏━□ feat5
+  ┃ ┏━□ feat5 unsubmitted
   ┃ ┃   874abc7 feat5 (now)
-  ┣━┻□ feat4
+  ┣━┻□ feat4 unsubmitted
   ┃    0eb14d6 feat4 (now)
-┏━┻□ feat1
+┏━┻□ feat1 unsubmitted
 ┃    ecc906e feat1 (now)
 main
