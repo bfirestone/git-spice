@@ -179,6 +179,8 @@ feature 2
     - #1 ◀
         - #2
 
+    Next: #2
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 2
@@ -187,6 +189,8 @@ feature 2
 
     - #1
         - #2 ◀
+
+    Depends on: #1
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->

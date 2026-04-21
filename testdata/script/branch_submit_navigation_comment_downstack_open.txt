@@ -57,6 +57,8 @@ feature 2
     - #1
         - #2 ◀
 
+    Depends on: #1
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 -- golden/comments-after.txt --

@@ -38,7 +38,7 @@ gs bs --fill
 
 # Verify all navigation comments are present initially
 shamhub dump comments
-cmp stdout $WORK/golden/all-comments.txt
+cmp stdout $WORK/golden/all-comments-before.txt
 
 # Merge a change and update.
 shamhub merge alice/example 1
@@ -51,9 +51,10 @@ gs branch submit
 gs bco feature3
 gs branch submit
 
-# Comments are the same.
+# After merge, PR #2's nav-comment drops "Depends on: #1" because
+# #1 is no longer part of the open stack view.
 shamhub dump comments
-cmp stdout $WORK/golden/all-comments.txt
+cmp stdout $WORK/golden/all-comments-after.txt
 
 -- repo/feature1.txt --
 feature 1
@@ -64,7 +65,7 @@ feature 2
 -- repo/feature3.txt --
 feature 3
 
--- golden/all-comments.txt --
+-- golden/all-comments-before.txt --
 - change: 1
   body: |
     This change is part of the following stack:
@@ -72,6 +73,8 @@ feature 3
     - #1 ◀
         - #2
             - #3
+
+    Next: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
@@ -83,6 +86,9 @@ feature 3
         - #2 ◀
             - #3
 
+    Depends on: #1
+    Next: #3
+
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
 - change: 3
@@ -92,6 +98,45 @@ feature 3
     - #1
         - #2
             - #3 ◀
+
+    Depends on: #2
+
+    <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
+    <!-- gs:navigation comment -->
+-- golden/all-comments-after.txt --
+- change: 1
+  body: |
+    This change is part of the following stack:
+
+    - #1 ◀
+        - #2
+            - #3
+
+    Next: #2
+
+    <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
+    <!-- gs:navigation comment -->
+- change: 2
+  body: |
+    This change is part of the following stack:
+
+    - #1
+        - #2 ◀
+            - #3
+
+    Next: #3
+
+    <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
+    <!-- gs:navigation comment -->
+- change: 3
+  body: |
+    This change is part of the following stack:
+
+    - #1
+        - #2
+            - #3 ◀
+
+    Depends on: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->

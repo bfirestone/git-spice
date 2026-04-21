@@ -192,6 +192,7 @@ func updateNavigationComments(
 				nodes = append(nodes, &stackedChange{
 					Change:       downstackCR,
 					Base:         lastDownstackIdx,
+					Merged:       true,
 					urlFormatter: urlFormatter,
 				})
 				// Inform previous node about this node.
@@ -436,6 +437,13 @@ type stackedChange struct {
 	Base   int // -1 = no base CR
 	Aboves []int
 
+	// Merged is true when this node represents a change that has
+	// already been merged into trunk (i.e. a "merged downstack"
+	// ancestor surfaced for context). Merged nodes are rendered in
+	// the tree but are not valid targets for the Depends on / Next
+	// summary lines.
+	Merged bool
+
 	// urlFormatter, if set, formats the change as a markdown link.
 	// Used for forges that don't auto-link change references (e.g., Bitbucket).
 	urlFormatter func(forge.ChangeID) string
@@ -471,6 +479,41 @@ var _navCommentRegexes = []*regexp.Regexp{
 	regexp.MustCompile(`(?m)^(\Q` + _commentMarker + `\E|\Q` + _markdownCommentMarker + `\E)$`),
 }
 
+// isOpenSubmitted reports whether the given node represents an open
+// submitted change — that is, it has a known change ID and has not
+// been merged into trunk.
+func isOpenSubmitted(n *stackedChange) bool {
+	return n != nil && n.Change != nil && !n.Merged
+}
+
+// nearestSubmittedAncestor returns the index of the closest downstack
+// node (walking base pointers) that represents an open submitted
+// change, or -1 if none exists.
+func nearestSubmittedAncestor(nodes []*stackedChange, current int) int {
+	for i := nodes[current].Base; i >= 0; i = nodes[i].Base {
+		if isOpenSubmitted(nodes[i]) {
+			return i
+		}
+	}
+	return -1
+}
+
+// nearestSubmittedDescendant returns the index of the closest upstack
+// node (breadth-first over Aboves) that represents an open submitted
+// change, or -1 if none exists.
+func nearestSubmittedDescendant(nodes []*stackedChange, current int) int {
+	queue := append([]int(nil), nodes[current].Aboves...)
+	for len(queue) > 0 {
+		idx := queue[0]
+		queue = queue[1:]
+		if isOpenSubmitted(nodes[idx]) {
+			return idx
+		}
+		queue = append(queue, nodes[idx].Aboves...)
+	}
+	return -1
+}
+
 func generateStackNavigationComment(
 	nodes []*stackedChange,
 	current int,
@@ -498,6 +541,27 @@ func generateStackNavigationComment(
 		opts = &stacknav.PrintOptions{Marker: marker}
 	}
 	stacknav.Print(&sb, nodes, current, opts)
+
+	// Summary: "Depends on:" names the nearest submitted downstack
+	// ancestor, and "Next:" names the nearest submitted upstack
+	// descendant. Each line is omitted when the corresponding value
+	// is empty (e.g., the bottom of a stack has no Depends on, and
+	// the top has no Next).
+	depIdx := nearestSubmittedAncestor(nodes, current)
+	nextIdx := nearestSubmittedDescendant(nodes, current)
+	if depIdx >= 0 || nextIdx >= 0 {
+		sb.WriteString("\n")
+	}
+	if depIdx >= 0 {
+		sb.WriteString("Depends on: ")
+		sb.WriteString(nodes[depIdx].Value())
+		sb.WriteString("\n")
+	}
+	if nextIdx >= 0 {
+		sb.WriteString("Next: ")
+		sb.WriteString(nodes[nextIdx].Value())
+		sb.WriteString("\n")
+	}
 
 	sb.WriteString("\n")
 	sb.WriteString(footer)

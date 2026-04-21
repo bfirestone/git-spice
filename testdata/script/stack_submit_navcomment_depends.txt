@@ -1,58 +1,58 @@
-# Test submit.navigationCommentSync=branch behavior (default)
-# Navigation comments should only be updated for the submitted branch
+# Verify that 'Depends on:' and 'Next:' lines appear
+# in the PR navigation comments posted for a linear stack.
 
 as 'Test <test@example.com>'
-at '2025-01-18T21:28:29Z'
+at '2024-04-05T16:40:32Z'
 
 # setup
 cd repo
 git init
 git commit --allow-empty -m 'Initial commit'
 
-# set up a fake GitHub remote
+# set up a fake forge remote
 shamhub init
-shamhub register alice
 shamhub new origin alice/example.git
+shamhub register alice
 git push origin main
+
+# create a stack:
+# main -> feat-a -> feat-b -> feat-c
+git add feat-a.txt
+gs branch create feat-a -m 'Add feat a'
+git add feat-b.txt
+gs branch create feat-b -m 'Add feat b'
+git add feat-c.txt
+gs branch create feat-c -m 'Add feat c'
+
 env SHAMHUB_USERNAME=alice
 gs auth login
 
-# Create a stack (main -> feature1 -> feature2 -> feature3)
-# but submit them separately, one at a time.
-# Because navigation comment update scope is set to branch (default),
-# lower branches will never get updated comments.
+# submit the entire stack.
+gs stack submit --fill
+stderr 'Created #1'
+stderr 'Created #2'
+stderr 'Created #3'
 
-git add feature1.txt
-gs bc -m feature1
-gs bs --fill
-
-git add feature2.txt
-gs bc -m feature2
-gs bs --fill
-
-git add feature3.txt
-gs bc -m feature3
-gs bs --fill
-
-# Verify all navigation comments are present
 shamhub dump comments
-cmp stdout $WORK/golden/all-comments.txt
+cmp stdout $WORK/golden/comments.txt
 
--- repo/feature1.txt --
-feature 1
+-- repo/feat-a.txt --
+This is feat a
+-- repo/feat-b.txt --
+This is feat b
+-- repo/feat-c.txt --
+This is feat c
 
--- repo/feature2.txt --
-feature 2
-
--- repo/feature3.txt --
-feature 3
-
--- golden/all-comments.txt --
+-- golden/comments.txt --
 - change: 1
   body: |
     This change is part of the following stack:
 
     - #1 ◀
+        - #2
+            - #3
+
+    Next: #2
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
@@ -62,8 +62,10 @@ feature 3
 
     - #1
         - #2 ◀
+            - #3
 
     Depends on: #1
+    Next: #3
 
     <sub>Change managed by [git-spice](https://abhinav.github.io/git-spice/).</sub>
     <!-- gs:navigation comment -->
