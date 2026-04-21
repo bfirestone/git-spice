@@ -180,6 +180,13 @@ func (p *graphLogPresenter) Present(res *list.BranchesResponse, currentBranch st
 		home = "" // if no home directory, we won't substitute paths
 	}
 
+	// Index branches by name for ancestor lookups during classification.
+	byName := make(map[string]*list.BranchItem, len(res.Branches))
+	for _, b := range res.Branches {
+		byName[b.Name] = b
+	}
+	trunk := res.Branches[res.TrunkIdx].Name
+
 	// Convert list.BranchItem to widget.BranchItem.
 	items := make([]*branchtree.Item, len(res.Branches))
 	for i, b := range res.Branches {
@@ -209,6 +216,12 @@ func (p *graphLogPresenter) Present(res *list.BranchesResponse, currentBranch st
 			if p.ShowCommentCounts && b.CommentCounts != nil {
 				item.CommentCounts = b.CommentCounts
 			}
+		}
+
+		// Classify readiness. Trunk never gets a readiness badge.
+		if b.Name != trunk {
+			item.Readiness, item.BlockedBy = classifyBranchReadiness(
+				b, byName, trunk, p.ShowCRStatus)
 		}
 
 		if s := b.PushStatus; s != nil {
@@ -261,6 +274,68 @@ func (p *graphLogPresenter) Present(res *list.BranchesResponse, currentBranch st
 	}
 
 	return nil
+}
+
+// classifyBranchReadiness runs the readiness classifier for a single
+// branch, walking downstack ancestors via byName until trunk. It returns
+// a branchtree.Readiness (mapped from list.Readiness) and the blocking
+// change ID when the branch is Blocked.
+//
+// When showCRStatus is false, the branch's own ChangeState (if any) is
+// unknown, so only Unsubmitted can be distinguished; submitted branches
+// receive ReadinessUnknown to suppress the badge.
+func classifyBranchReadiness(
+	b *list.BranchItem,
+	byName map[string]*list.BranchItem,
+	trunk string,
+	showCRStatus bool,
+) (branchtree.Readiness, forge.ChangeID) {
+	if b.ChangeID == nil {
+		return branchtree.ReadinessUnsubmitted, nil
+	}
+	if !showCRStatus {
+		// Without state data, we can only distinguish submitted from
+		// unsubmitted. Suppress the badge on submitted branches.
+		return branchtree.ReadinessUnknown, nil
+	}
+
+	input := list.ClassifyInput{
+		Change: &list.ClassifyChange{
+			ID:    b.ChangeID,
+			State: b.ChangeState,
+		},
+	}
+	for name := b.Base; name != "" && name != trunk; {
+		anc, ok := byName[name]
+		if !ok {
+			break
+		}
+		var change *list.ClassifyChange
+		if anc.ChangeID != nil {
+			change = &list.ClassifyChange{
+				ID:    anc.ChangeID,
+				State: anc.ChangeState,
+			}
+		}
+		input.Ancestors = append(input.Ancestors, list.ClassifyAncestor{Change: change})
+		name = anc.Base
+	}
+
+	r, by := list.Classify(input)
+	var tr branchtree.Readiness
+	switch r {
+	case list.ReadinessUnsubmitted:
+		tr = branchtree.ReadinessUnsubmitted
+	case list.ReadinessMerged:
+		tr = branchtree.ReadinessMerged
+	case list.ReadinessDraft:
+		tr = branchtree.ReadinessDraft
+	case list.ReadinessBlocked:
+		tr = branchtree.ReadinessBlocked
+	case list.ReadinessReady:
+		tr = branchtree.ReadinessReady
+	}
+	return tr, by
 }
 
 type jsonLogPresenter struct {

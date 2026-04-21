@@ -55,6 +55,14 @@ type Item struct {
 	// nil indicates state is not available.
 	ChangeState *forge.ChangeState
 
+	// Readiness is the local merge-readiness classification of the
+	// branch. ReadinessUnknown (zero value) suppresses the badge.
+	Readiness Readiness
+
+	// BlockedBy is the change that blocks this branch from merging.
+	// Only rendered when Readiness == ReadinessBlocked.
+	BlockedBy forge.ChangeID
+
 	// CommentCounts holds comment resolution counts for the change.
 	// If non-nil and Total > 0, rendered as " [☑️Resolved/Total💬]".
 	CommentCounts *forge.CommentCounts
@@ -104,6 +112,32 @@ type Item struct {
 
 	// TODO: enum for highlighted/disabled state?
 }
+
+// Readiness is the local classification of a branch's
+// merge-readiness, displayed as a short badge after the change ID.
+type Readiness int
+
+const (
+	// ReadinessUnknown suppresses the badge entirely.
+	ReadinessUnknown Readiness = iota
+
+	// ReadinessUnsubmitted marks a branch with no open change.
+	ReadinessUnsubmitted
+
+	// ReadinessMerged marks a branch whose change has merged.
+	ReadinessMerged
+
+	// ReadinessDraft marks a branch whose change is a draft.
+	ReadinessDraft
+
+	// ReadinessBlocked marks a branch whose change is waiting on a
+	// downstack ancestor's change to merge first.
+	ReadinessBlocked
+
+	// ReadinessReady marks a branch whose change is open, not a draft,
+	// and has no unmerged submitted ancestors.
+	ReadinessReady
+)
 
 // PushStatus contains push-related information
 // if the branch has been pushed to a remote.
@@ -155,6 +189,10 @@ type Style struct {
 	// Must include the text " (needs restack)" via SetString.
 	NeedsRestack ui.Style
 
+	// Readiness styles for different readiness classifications.
+	// Each style must include the badge text via SetString.
+	Readiness ReadinessStyle
+
 	// NodeMarker is the default node marker style.
 	// Must include the marker character via SetString.
 	NodeMarker ui.Style
@@ -173,6 +211,27 @@ type Style struct {
 	// Marker is the trailing selection marker shown for highlighted items.
 	// Must include the marker character via SetString.
 	Marker ui.Style
+}
+
+// ReadinessStyle styles each Readiness badge.
+// Each embedded style must include the badge text via SetString.
+// A lipgloss prefix of " " (space) is added by the renderer.
+type ReadinessStyle struct {
+	// Unsubmitted styles the "unsubmitted" badge.
+	Unsubmitted ui.Style
+
+	// Merged styles the "merged" badge.
+	Merged ui.Style
+
+	// Draft styles the "draft" badge.
+	Draft ui.Style
+
+	// Blocked styles the "blocked" badge; the blocking change ID is
+	// appended by the renderer in the same style.
+	Blocked ui.Style
+
+	// Ready styles the "ready" badge.
+	Ready ui.Style
 }
 
 // ChangeStateStyle styles different change states.
@@ -206,7 +265,14 @@ var DefaultStyle = Style{
 	CommentCountsResolved: ui.NewStyle().Foreground(ui.Green),
 	Worktree:              ui.NewStyle().Faint(true),
 	PushStatus:            ui.NewStyle().Foreground(ui.Yellow).Faint(true),
-	NeedsRestack:          ui.NewStyle().Foreground(ui.Gray).SetString(" (needs restack)"), // TODO: drop leading space
+	NeedsRestack: ui.NewStyle().Foreground(ui.Gray).SetString(" (needs restack)"), // TODO: drop leading space
+	Readiness: ReadinessStyle{
+		Unsubmitted: ui.NewStyle().Faint(true).SetString("unsubmitted"),
+		Merged:      ui.NewStyle().Foreground(ui.Magenta).SetString("merged"),
+		Draft:       ui.NewStyle().Foreground(ui.Gray).SetString("draft"),
+		Blocked:     ui.NewStyle().Foreground(ui.Yellow).SetString("blocked by"),
+		Ready:       ui.NewStyle().Foreground(ui.Green).SetString("ready"),
+	},
 	NodeMarker:            fliptree.DefaultNodeMarker,
 	NodeMarkerHighlighted: fliptree.DefaultNodeMarker.SetString("■"),
 	NodeMarkerDisabled:    fliptree.DefaultNodeMarker.Faint(true),
@@ -341,6 +407,10 @@ func (r *branchTreeRenderer) item(sb *strings.Builder, item *Item) {
 		sb.WriteString(r.Style.NeedsRestack.String())
 	}
 
+	if item.Readiness != ReadinessUnknown {
+		r.readiness(sb, item.Readiness, item.BlockedBy)
+	}
+
 	r.pushStatus(sb, item.PushStatus)
 
 	if item.Highlighted {
@@ -387,6 +457,29 @@ func (r *branchTreeRenderer) changeID(
 		case forge.ChangeMerged:
 			sb.WriteString(r.Style.ChangeState.Merged.String())
 		}
+	}
+}
+
+func (r *branchTreeRenderer) readiness(
+	sb *strings.Builder,
+	readiness Readiness,
+	blockedBy forge.ChangeID,
+) {
+	sb.WriteString(" ")
+	switch readiness {
+	case ReadinessUnsubmitted:
+		sb.WriteString(r.Style.Readiness.Unsubmitted.String())
+	case ReadinessMerged:
+		sb.WriteString(r.Style.Readiness.Merged.String())
+	case ReadinessDraft:
+		sb.WriteString(r.Style.Readiness.Draft.String())
+	case ReadinessBlocked:
+		sb.WriteString(r.Style.Readiness.Blocked.String())
+		if blockedBy != nil {
+			sb.WriteString(r.Style.Readiness.Blocked.Render(" " + blockedBy.String()))
+		}
+	case ReadinessReady:
+		sb.WriteString(r.Style.Readiness.Ready.String())
 	}
 }
 
@@ -518,6 +611,7 @@ type branchTreeStyle struct {
 	Worktree              lipgloss.Style
 	PushStatus            lipgloss.Style
 	NeedsRestack          lipgloss.Style
+	Readiness             readinessStyle
 	NodeMarker            lipgloss.Style
 	NodeMarkerHighlighted lipgloss.Style
 	NodeMarkerDisabled    lipgloss.Style
@@ -537,11 +631,30 @@ func (s Style) resolve(theme ui.Theme) branchTreeStyle {
 		Worktree:              s.Worktree.Resolve(theme),
 		PushStatus:            s.PushStatus.Resolve(theme),
 		NeedsRestack:          s.NeedsRestack.Resolve(theme),
+		Readiness:             s.Readiness.resolve(theme),
 		NodeMarker:            s.NodeMarker.Resolve(theme),
 		NodeMarkerHighlighted: s.NodeMarkerHighlighted.Resolve(theme),
 		NodeMarkerDisabled:    s.NodeMarkerDisabled.Resolve(theme),
 		TextHighlight:         s.TextHighlight.Resolve(theme),
 		Marker:                s.Marker.Resolve(theme),
+	}
+}
+
+type readinessStyle struct {
+	Unsubmitted lipgloss.Style
+	Merged      lipgloss.Style
+	Draft       lipgloss.Style
+	Blocked     lipgloss.Style
+	Ready       lipgloss.Style
+}
+
+func (s ReadinessStyle) resolve(theme ui.Theme) readinessStyle {
+	return readinessStyle{
+		Unsubmitted: s.Unsubmitted.Resolve(theme),
+		Merged:      s.Merged.Resolve(theme),
+		Draft:       s.Draft.Resolve(theme),
+		Blocked:     s.Blocked.Resolve(theme),
+		Ready:       s.Ready.Resolve(theme),
 	}
 }
 
