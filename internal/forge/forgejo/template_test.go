@@ -1,11 +1,14 @@
 package forgejo
 
 import (
+	"context"
 	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -85,6 +88,48 @@ func TestRepository_ListChangeTemplates_newlineWrappedBase64(t *testing.T) {
 	require.Len(t, templates, 1)
 	assert.Equal(t, "PULL_REQUEST_TEMPLATE.md", templates[0].Filename)
 	assert.Equal(t, body, templates[0].Body)
+}
+
+func TestRepository_ListChangeTemplates_probesConcurrently(t *testing.T) {
+	// The submit handler gives template listing a short timeout
+	// (spice.submit.listTemplatesTimeout, 1s by default),
+	// so candidate paths must be probed concurrently:
+	// sequential probes do not fit the budget
+	// on high-latency instances.
+	//
+	// The server below releases responses
+	// only once every candidate path has been requested,
+	// so a sequential implementation stalls here
+	// until the context expires.
+	numPaths := len((&Forge{}).ChangeTemplatePaths())
+	release := make(chan struct{})
+	var (
+		mu      sync.Mutex
+		arrived int
+	)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		arrived++
+		if arrived == numPaths {
+			close(release)
+		}
+		mu.Unlock()
+
+		select {
+		case <-release:
+			http.NotFound(w, r)
+		case <-r.Context().Done():
+		}
+	}))
+	defer srv.Close()
+
+	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+	defer cancel()
+
+	r := newTestRepository(t, srv, "alice", "widget")
+	templates, err := r.ListChangeTemplates(ctx)
+	require.NoError(t, err)
+	assert.Empty(t, templates)
 }
 
 func TestRepository_ListChangeTemplates_fallThrough(t *testing.T) {
