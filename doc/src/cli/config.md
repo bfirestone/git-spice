@@ -215,7 +215,7 @@ the repository path.
 ```
 
 Accepted values are registered forge IDs,
-including `github`, `gitlab`, and `bitbucket`.
+including `github`, `gitlab`, `bitbucket`, and `forgejo`.
 Test repositories may also use `shamhub`.
 
 Alternatively, set this option with the `GIT_SPICE_FORGE_KIND`
@@ -251,6 +251,46 @@ or `https://api.bitbucket.org/2.0` otherwise.
 URL of the Bitbucket instance used for Bitbucket requests.
 Defaults to `$BITBUCKET_URL` if set,
 or `https://bitbucket.org` otherwise.
+
+### spice.forge.forgejo.apiURL
+
+<!-- gs:version unreleased -->
+
+URL at which the Forgejo API is available.
+Defaults to `$FORGEJO_API_URL` if set,
+or the Forgejo URL with `/api/v1` appended otherwise.
+
+### spice.forge.forgejo.url
+
+<!-- gs:version unreleased -->
+
+URL of the Forgejo instance used for Forgejo requests.
+Defaults to `$FORGEJO_URL` if set,
+or `https://codeberg.org` otherwise.
+
+### spice.forge.forgejo.oauth.clientID
+
+<!-- gs:version unreleased -->
+
+Client ID for OAuth authentication with Forgejo.
+
+Defaults to `$FORGEJO_OAUTH_CLIENT_ID` if set.
+
+For Self-Hosted Forgejo instances, you must set this value
+to a custom Client ID registered with your instance.
+
+See also [Forgejo Self-Hosted](../setup/auth.md#forgejo-self-hosted).
+
+### spice.forge.forgejo.deleteBranchOnMerge
+
+<!-- gs:version unreleased -->
+
+Whether to delete the source branch when a Pull Request is merged.
+
+**Accepted values:**
+
+- `true` (default)
+- `false`
 
 ### spice.forge.gitlab.url
 
