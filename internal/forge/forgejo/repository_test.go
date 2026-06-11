@@ -1,7 +1,6 @@
 package forgejo
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -145,12 +144,4 @@ func TestRepository_Forge(t *testing.T) {
 	f := &Forge{}
 	r := &Repository{forge: f}
 	assert.Equal(t, f, r.Forge())
-}
-
-func writeJSON(t *testing.T, w http.ResponseWriter, code int, v any) {
-	t.Helper()
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	require.NoError(t, json.NewEncoder(w).Encode(v))
 }
