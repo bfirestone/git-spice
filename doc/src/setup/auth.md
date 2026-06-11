@@ -12,9 +12,10 @@ However, once you want to push or pull changes to/from a remote repository,
 you will need to authenticate with the respective service.
 
 This page covers methods to authenticate git-spice
-with GitHub, GitLab, and Bitbucket Cloud.
+with GitHub, GitLab, Bitbucket Cloud, and Forgejo.
 Note that GitLab support requires at least version <!-- gs:version v0.9.0 -->.
 Bitbucket Cloud support requires at least version <!-- gs:version v0.25.0 -->.
+Forgejo support is available in version <!-- gs:version unreleased -->.
 
 ## Logging in
 
@@ -39,25 +40,25 @@ Take the following steps to authenticate with a service:
 
     Skip prompt (2) by running $$gs auth login$$
     inside a Git repository cloned from
-    GitHub, GitLab, or Bitbucket.
+    GitHub, GitLab, Bitbucket, or Forgejo.
 
 ## Authentication methods
 
 Each supported service supports different authentication methods.
 
-- [OAuth](#oauth): <!-- gs:badge:github --> <!-- gs:badge:gitlab -->
+- [OAuth](#oauth): <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:forgejo -->
 - [GitHub App](#github-app): <!-- gs:badge:github -->
 - [Git Credential Manager](#git-credential-manager): <!-- gs:badge:github --> <!-- gs:badge:bitbucket -->
-- [Personal Access Token](#personal-access-token): <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket -->
-- [Service CLI](#service-cli): <!-- gs:badge:github --> <!-- gs:badge:gitlab -->
-- [Environment variable](#environment-variable): <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket -->
+- [Personal Access Token](#personal-access-token): <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket --> <!-- gs:badge:forgejo -->
+- [Service CLI](#service-cli): <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:forgejo -->
+- [Environment variable](#environment-variable): <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket --> <!-- gs:badge:forgejo -->
 
 Read on for more details on each method,
 or skip on to [Pick an authentication method](#picking-an-authentication-method).
 
 ### OAuth
 
-**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab -->
+**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:forgejo -->
 
 With OAuth authentication, you will take the following steps:
 
@@ -100,6 +101,28 @@ It will take a few seconds to verify after you enter it.
     Be sure to **uncheck** the "Confidential" option when creating the App.
 
     If that is not an option,
+    use a [Personal Access Token](#personal-access-token).
+
+=== "<!-- gs:forgejo -->"
+
+    <!-- gs:version unreleased -->
+
+    OAuth with Forgejo requires configuration
+    before you can use it for authentication.
+    An instance administrator must first register an OAuth App
+    and provide the Client ID.
+
+    You then set the Client ID with the configuration option
+    $$spice.forge.forgejo.oauth.clientID$$:
+
+    ```freeze language="terminal"
+    {green}${reset} git config {red}spice.forge.forgejo.oauth.clientID{reset} {mag}your-client-id{reset}
+    ```
+
+    This may also be set with the
+    `FORGEJO_OAUTH_CLIENT_ID` environment variable.
+
+    Alternatively, if you don't want to configure OAuth,
     use a [Personal Access Token](#personal-access-token).
 
 ### GitHub App
@@ -179,7 +202,7 @@ After that, git-spice will use the stored OAuth token automatically.
 
 ### Personal Access Token
 
-**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket -->
+**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket --> <!-- gs:badge:forgejo -->
 
 To use a Personal Access Token with git-spice,
 you will generate a Personal Access Token on the website
@@ -277,14 +300,33 @@ Select an authentication method: {red}Personal Access Token{reset}
     {green}INF{reset} bitbucket: successfully logged in
     ```
 
+=== "<!-- gs:forgejo -->"
+
+    <!-- gs:version unreleased -->
+
+    To create a Personal Access Token on a Forgejo instance:
+
+    1. Go to your instance's Settings → Applications
+       (e.g., <https://codeberg.org/user/settings/applications>).
+    2. Click "Create New Token".
+    3. Enter a descriptive name for the token.
+    4. Select the following scopes:
+
+        - **write:repository** - create and edit pull requests
+        - **write:issue** - manage issues and pull requests
+        - **read:user** - read user information
+
+    5. Click "Generate Token" and copy the generated token.
+
 After you have a token, enter it into the prompt.
 
 ### Service CLI
 
-**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab -->
+**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:forgejo -->
 
-If you have the GitHub or GitLab CLIs installed and authenticated,
-you can get authentication tokens for git-spice from them.
+If you have the GitHub, GitLab, or Forgejo CLIs installed
+and authenticated, you can get authentication tokens
+for git-spice from them.
 
 === "<!-- gs:github -->"
 
@@ -304,12 +346,26 @@ you can get authentication tokens for git-spice from them.
         {green}${reset} glab auth login
         ```
 
+=== "<!-- gs:forgejo -->"
+
+    <!-- gs:version unreleased -->
+
+    1. Install the [tea CLI](https://gitea.io/en-us/docs/installation/).
+    2. Authenticate it:
+
+        ```freeze language="terminal"
+        {green}${reset} tea login add
+        ```
+
+    git-spice will look for a login matching the Forgejo instance URL
+    in `~/.config/tea/config.yml` and reuse it automatically.
+
 Once you pick this authentication option, no additional steps are required.
 git-spice will request a token from the CLI as needed.
 
 ### Environment variable
 
-**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket -->
+**Supported by** <!-- gs:badge:github --> <!-- gs:badge:gitlab --> <!-- gs:badge:bitbucket --> <!-- gs:badge:forgejo -->
 
 You can provide the authentication token as an environment variable.
 This is not recommended as a primary authentication method,
@@ -327,6 +383,13 @@ but it can be useful in CI/CD environments.
 
     Set the `BITBUCKET_TOKEN` environment variable to your OAuth token.
     This should be a Bearer token (OAuth access token).
+
+=== "<!-- gs:forgejo -->"
+
+    <!-- gs:version unreleased -->
+
+    Set the `FORGEJO_TOKEN` environment variable to your personal
+    access token.
 
 If you have the environment variable set,
 this takes precedence over all other authentication methods.
@@ -381,6 +444,22 @@ The $$gs auth login$$ operation will always fail if you use this method.
     [Git Credential Manager](#git-credential-manager) integrates with
     Bitbucket's OAuth flow and handles token refresh automatically.
     This is convenient if you already have GCM installed for git operations.
+
+    [Personal Access Token](#personal-access-token) is flexible and secure.
+    It requires manual token management but works without additional tools.
+
+=== "<!-- gs:forgejo -->"
+
+    <!-- gs:version unreleased -->
+
+    [Service CLI](#service-cli) is the most convenient method
+    if you already have the tea CLI installed and authenticated.
+    It loses security benefits of the other methods,
+    as it re-uses the token assigned to the CLI.
+
+    [OAuth](#oauth) requires your instance administrator to configure
+    an OAuth App. Once configured, you set the Client ID
+    with $$spice.forge.forgejo.oauth.clientID$$.
 
     [Personal Access Token](#personal-access-token) is flexible and secure.
     It requires manual token management but works without additional tools.
@@ -506,6 +585,54 @@ This may also be set with the `GITLAB_OAUTH_CLIENT_ID` environment variable.
 
 ```freeze language="bash"
 export GITLAB_OAUTH_CLIENT_ID=your-client-id
+```
+
+Authenticate with $$gs auth login$$ as usual after that.
+
+### Forgejo Self-Hosted
+
+<!-- gs:version unreleased -->
+
+To use git-spice with a self-hosted Forgejo instance,
+set $$spice.forge.forgejo.url$$ to the address of your instance.
+
+```freeze language="terminal"
+{green}${reset} git config {red}spice.forge.forgejo.url{reset} {mag}https://forgejo.example.com{reset}
+```
+
+*Optionally*, also set the Forgejo API URL
+with the $$spice.forge.forgejo.apiURL$$ configuration option.
+By default, the API URL is the same as the Forgejo URL.
+
+```freeze language="terminal"
+{green}${reset} git config {red}spice.forge.forgejo.apiURL{reset} {mag}https://forgejo.example.com/api/v1{reset}
+```
+
+Alternatively, set these configuration options
+with the `FORGEJO_URL` and `FORGEJO_API_URL` environment variables.
+
+```freeze language="bash"
+export FORGEJO_URL=https://forgejo.example.com
+export FORGEJO_API_URL=https://forgejo.example.com/api/v1
+```
+
+#### OAuth with Forgejo Self-Hosted
+
+To use OAuth authentication with a self-hosted Forgejo instance,
+an administrator must first register an OAuth App on the instance.
+This will generate an OAuth Client ID for the App.
+
+Feed that into git-spice with the $$spice.forge.forgejo.oauth.clientID$$
+configuration option.
+
+```freeze language="terminal"
+{green}${reset} git config {red}spice.forge.forgejo.oauth.clientID{reset} {mag}your-client-id{reset}
+```
+
+This may also be set with the `FORGEJO_OAUTH_CLIENT_ID` environment variable.
+
+```freeze language="bash"
+export FORGEJO_OAUTH_CLIENT_ID=your-client-id
 ```
 
 Authenticate with $$gs auth login$$ as usual after that.
